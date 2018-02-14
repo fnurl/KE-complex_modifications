@@ -13,6 +13,16 @@
             ]
         },
         {
+            "description": "Change Left Ctrl to Hyper (Shift, Opt, Ctrl Cmd)",
+            "manipulators": [
+                {
+                    "type": "basic",
+                    "from": <%= from("left_control", [], []) %>,
+                    "to": <%= to([["left_command", ["left_shift", "left_option", "left_control"]]]) %>
+                }
+            ]
+        },
+        {
             "description": "Map open_bracket, quote and semicolon to Swedish chars on keypad.",
             "manipulators": [
                 {
