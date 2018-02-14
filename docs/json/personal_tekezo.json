@@ -2,8 +2,27 @@
   "title": "Personal rules (@tekezo)",
   "rules": [
     {
-      "description": "Launcher Mode v3 and Mouse Keys Mode v3 (rev 11)",
+      "description": "Launcher Mode v3 and Mouse Keys Mode v3 (rev 13)",
       "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "spacebar",
+            "modifiers": {
+              "mandatory": [
+                "option"
+              ],
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "spacebar"
+            }
+          ]
+        },
         {
           "type": "basic",
           "from": {
@@ -812,6 +831,32 @@
             }
           ],
           "from": {
+            "key_code": "e",
+            "modifiers": {
+              "mandatory": [
+                "left_shift"
+              ],
+              "optional": [
+                "caps_lock"
+              ]
+            }
+          },
+          "to": [
+            {
+              "shell_command": "[ `ps -x |grep /eclipse | grep -v grep | wc -l` -ne 0 ] && open -a 'Eclipse Java.app'"
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "launcher_mode_v3",
+              "value": 1
+            }
+          ],
+          "from": {
             "key_code": "open_bracket",
             "modifiers": {
               "mandatory": [
@@ -897,7 +942,7 @@
           "to": [
             {
               "mouse_key": {
-                "horizontal_wheel": -32
+                "horizontal_wheel": 32
               }
             }
           ],
@@ -930,7 +975,7 @@
           "to": [
             {
               "mouse_key": {
-                "vertical_wheel": -32
+                "vertical_wheel": 32
               }
             }
           ],
@@ -963,7 +1008,7 @@
           "to": [
             {
               "mouse_key": {
-                "vertical_wheel": 32
+                "vertical_wheel": -32
               }
             }
           ],
@@ -996,7 +1041,7 @@
           "to": [
             {
               "mouse_key": {
-                "horizontal_wheel": 32
+                "horizontal_wheel": -32
               }
             }
           ],
@@ -1481,7 +1526,7 @@
       ]
     },
     {
-      "description": "Configurations for apps (rev 7)",
+      "description": "Configurations for apps (rev 8)",
       "manipulators": [
         {
           "type": "basic",
@@ -2133,6 +2178,50 @@
               ]
             }
           ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "q",
+            "modifiers": {
+              "mandatory": [
+                "command"
+              ],
+              "optional": [
+                "caps_lock"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.apple\\.ActivityMonitor$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "w",
+            "modifiers": {
+              "mandatory": [
+                "command"
+              ],
+              "optional": [
+                "caps_lock"
+              ]
+            }
+          },
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.adiumX\\.adiumX$"
+              ]
+            }
+          ]
         }
       ]
     },
@@ -2398,7 +2487,7 @@
       ]
     },
     {
-      "description": "Miscellaneous configuration @tekezo (rev 1)",
+      "description": "Miscellaneous configuration @tekezo (rev 2)",
       "manipulators": [
         {
           "type": "basic",
@@ -2437,6 +2526,42 @@
           "to": [
             {
               "key_code": "spacebar"
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "simultaneous": [
+              {
+                "key_code": "escape"
+              },
+              {
+                "key_code": "1"
+              }
+            ]
+          },
+          "to": [
+            {
+              "consumer_key_code": "display_brightness_decrement"
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "simultaneous": [
+              {
+                "key_code": "escape"
+              },
+              {
+                "key_code": "2"
+              }
+            ]
+          },
+          "to": [
+            {
+              "consumer_key_code": "display_brightness_increment"
             }
           ]
         }

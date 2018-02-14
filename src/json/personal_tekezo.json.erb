@@ -2,13 +2,18 @@
     "title": "Personal rules (@tekezo)",
     "rules": [
         {
-            "description": "Launcher Mode v3 and Mouse Keys Mode v3 (rev 11)",
+            "description": "Launcher Mode v3 and Mouse Keys Mode v3 (rev 13)",
             "manipulators": [
 
                 <%# -------------------------------------------------- %>
                 <%# Change spacebar,left_command,right_command %>
                 <%# -------------------------------------------------- %>
 
+                {
+                    "type": "basic",
+                    "from": <%= from("spacebar", ["option"], ["any"]) %>,
+                    "to": <%= to([["spacebar"]]) %>
+                },
                 {
                     "type": "basic",
                     "from": <%= from("spacebar", [], ["any"]) %>,
@@ -366,6 +371,17 @@
                     "conditions": [
                         { "type": "variable_if", "name": "launcher_mode_v3", "value": 1 }
                     ],
+                    "from": <%= from("e", ["left_shift"], ["caps_lock"]) %>,
+                    "to": [
+                        <%# Focus Eclipse Java if running.  %>
+                        { "shell_command": "[ `ps -x |grep /eclipse | grep -v grep | wc -l` -ne 0 ] && open -a 'Eclipse Java.app'" }
+                    ]
+                },
+                {
+                    "type": "basic",
+                    "conditions": [
+                        { "type": "variable_if", "name": "launcher_mode_v3", "value": 1 }
+                    ],
                     "from": <%= from("open_bracket", ["left_shift"], ["caps_lock"]) %>,
                     "to": <%= to([["f17"]]) %>
                 },
@@ -407,7 +423,7 @@
                 {
                     "type": "basic",
                     "from": <%= from("h", ["left_shift"], ["any"]) %>,
-                    "to": [ { "mouse_key": { "horizontal_wheel": -32 } } ],
+                    "to": [ { "mouse_key": { "horizontal_wheel": 32 } } ],
                     "conditions": [
                         { "type": "variable_if", "name": "mouse_keys_mode_v3", "value": 1 },
                         { "type": "variable_if", "name": "mouse_keys_mode_v3_scroll", "value": 1 }
@@ -416,15 +432,6 @@
                 {
                     "type": "basic",
                     "from": <%= from("j", ["left_shift"], ["any"]) %>,
-                    "to": [ { "mouse_key": { "vertical_wheel": -32 } } ],
-                    "conditions": [
-                        { "type": "variable_if", "name": "mouse_keys_mode_v3", "value": 1 },
-                        { "type": "variable_if", "name": "mouse_keys_mode_v3_scroll", "value": 1 }
-                    ]
-                },
-                {
-                    "type": "basic",
-                    "from": <%= from("k", ["left_shift"], ["any"]) %>,
                     "to": [ { "mouse_key": { "vertical_wheel": 32 } } ],
                     "conditions": [
                         { "type": "variable_if", "name": "mouse_keys_mode_v3", "value": 1 },
@@ -433,15 +440,24 @@
                 },
                 {
                     "type": "basic",
+                    "from": <%= from("k", ["left_shift"], ["any"]) %>,
+                    "to": [ { "mouse_key": { "vertical_wheel": -32 } } ],
+                    "conditions": [
+                        { "type": "variable_if", "name": "mouse_keys_mode_v3", "value": 1 },
+                        { "type": "variable_if", "name": "mouse_keys_mode_v3_scroll", "value": 1 }
+                    ]
+                },
+                {
+                    "type": "basic",
                     "from": <%= from("l", ["left_shift"], ["any"]) %>,
-                    "to": [ { "mouse_key": { "horizontal_wheel": 32 } } ],
+                    "to": [ { "mouse_key": { "horizontal_wheel": -32 } } ],
                     "conditions": [
                         { "type": "variable_if", "name": "mouse_keys_mode_v3", "value": 1 },
                         { "type": "variable_if", "name": "mouse_keys_mode_v3_scroll", "value": 1 }
                     ]
                 },
 
-                <%# normal %>
+                <%# pointing_motion %>
 
                 {
                     "type": "basic",
@@ -571,7 +587,7 @@
             ]
         },
         {
-            "description": "Configurations for apps (rev 7)",
+            "description": "Configurations for apps (rev 8)",
             "manipulators": [
                 <%# -------------------------------------------------- %>
                 <%# remote_desktop, virtual_machine %>
@@ -688,6 +704,22 @@
                     "from": <%= from("e", ["left_control"], ["caps_lock", "shift"]) %>,
                     "to": <%= to([["right_arrow", ["left_command"]]]) %>,
                     "conditions": [ <%= frontmost_application_if("browser") %> ]
+                },
+
+                <%# -------------------------------------------------- %>
+                <%# others %>
+                <%# -------------------------------------------------- %>
+
+                {
+                    "type": "basic",
+                    "from": <%= from("q", ["command"], ["caps_lock"]) %>,
+                    "conditions": [ <%= frontmost_application_if("activity_monitor") %> ]
+                },
+
+                {
+                    "type": "basic",
+                    "from": <%= from("w", ["command"], ["caps_lock"]) %>,
+                    "conditions": [ <%= frontmost_application_if("adium") %> ]
                 }
             ]
         },
@@ -750,7 +782,7 @@
             ]
         },
         {
-            "description": "Miscellaneous configuration @tekezo (rev 1)",
+            "description": "Miscellaneous configuration @tekezo (rev 2)",
             "manipulators": [
                 {
                     "type": "basic",
@@ -762,6 +794,42 @@
                     "type": "basic",
                     "from": <%= from("f18", [], ["any"]) %>,
                     "to": <%= to([["spacebar"]]) %>
+                },
+                {
+                    "type": "basic",
+                    "from": {
+                        "simultaneous": [
+                            {
+                                "key_code": "escape"
+                            },
+                            {
+                                "key_code": "1"
+                            }
+                        ]
+                    },
+                    "to": [
+                        {
+                            "consumer_key_code": "display_brightness_decrement"
+                        }
+                    ]
+                },
+                {
+                    "type": "basic",
+                    "from": {
+                        "simultaneous": [
+                            {
+                                "key_code": "escape"
+                            },
+                            {
+                                "key_code": "2"
+                            }
+                        ]
+                    },
+                    "to": [
+                        {
+                            "consumer_key_code": "display_brightness_increment"
+                        }
+                    ]
                 }
             ]
         }
