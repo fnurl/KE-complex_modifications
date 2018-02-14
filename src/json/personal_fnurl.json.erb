@@ -1,0 +1,296 @@
+{
+    "title": "Personal rules @fnurl",
+    "rules": [
+        {
+            "description": "Change caps_lock to Ctrl if pressed with other keys, to Escape if pressed alone.",
+            "manipulators": [
+                {
+                    "type": "basic",
+                    "from": <%= from("caps_lock", [], ["any"]) %>,
+                    "to": <%= to([["left_control"]]) %>,
+                    "to_if_alone": <%= to([["escape"]]) %>
+                }
+            ]
+        },
+        {
+            "description": "Map open_bracket, quote and semicolon to Swedish chars on keypad.",
+            "manipulators": [
+                {
+                    "type": "basic",
+                    "conditions": [
+                        { "type": "variable_if", "name": "symbolfn_mode1", "value": 0 },
+                        { "type": "variable_if", "name": "symbolfn_mode2", "value": 0 }
+                    ],
+                    "from": <%= from("open_bracket", [], ["any"]) %>,
+                    "to": <%= to([["keypad_7"]]) %>
+                },
+                {
+                    "type": "basic",
+                    "conditions": [
+                        { "type": "variable_if", "name": "symbolfn_mode1", "value": 0 },
+                        { "type": "variable_if", "name": "symbolfn_mode2", "value": 0 }
+                    ],
+                    "from": <%= from("quote", [], ["any"]) %>,
+                    "to": <%= to([["keypad_8"]]) %>
+                },
+                {
+                    "type": "basic",
+                    "conditions": [
+                        { "type": "variable_if", "name": "symbolfn_mode1", "value": 0 },
+                        { "type": "variable_if", "name": "symbolfn_mode2", "value": 0 }
+                    ],
+                    "from": <%= from("semicolon", [], ["any"]) %>,
+                    "to": <%= to([["keypad_9"]]) %>
+                }
+            ]
+        },
+        {
+            "description": "SpaceFN: Space enables SpaceFN mode (see: https://geekhack.org/index.php?topic=51069.0)",
+            "manipulators": [
+                {
+                    "type": "basic",
+                    "from": <%= from("spacebar", [], ["any"]) %>,
+                    "to": [ { "set_variable": { "name": "spacefn_mode", "value": 1 } } ],
+                    "to_after_key_up": [ { "set_variable": { "name": "spacefn_mode", "value": 0 } } ],
+                    "to_if_alone": <%= to([["spacebar"]]) %>
+                }
+            ]
+        },
+        {
+            "description": "SpaceFN: Space+[sdfghjkl] to parens.",
+            "manipulators": [
+                {
+                    <%# SpaceFn+g to left square bracket, [ %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    "from": <%= from("g", [], []) %>,
+                    "to": <%= to([["open_bracket"]]) %>
+                },
+                {
+                    <%# SpaceFn+f to left parenthesis, ( %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    "from": <%= from("f", [], []) %>,
+                    "to": <%= to([["9", ["left_shift"]]]) %>
+                },
+                {
+                    <%# SpaceFn+d to left curly bracket, { %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    "from": <%= from("d", [], []) %>,
+                    "to": <%= to([["open_bracket", ["left_shift"]]]) %>
+                },
+                {
+                    <%# SpaceFn+s to less than, < %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    "from": <%= from("s", [], []) %>,
+                    "to": <%= to([["comma", ["left_shift"]]]) %>
+                },
+                {
+                    <%# SpaceFn+h to right square bracket, ] %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    "from": <%= from("h", [], []) %>,
+                    "to": <%= to([["close_bracket"]]) %>
+                },
+                {
+                    <%# SpaceFn+j to right parenthesis, ) %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    "from": <%= from("j", [], []) %>,
+                    "to": <%= to([["0", ["left_shift"]]]) %>
+                },
+                {
+                    <%# SpaceFn+k to right curly bracket, } %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    "from": <%= from("k", [], []) %>,
+                    "to": <%= to([["close_bracket", ["left_shift"]]]) %>
+                },
+                {
+                    <%# SpaceFn+l to greater than, > %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    "from": <%= from("l", [], []) %>,
+                    "to": <%= to([["period", ["left_shift"]]]) %>
+                }
+            ]
+        },
+        {
+            "description": "SpaceFN: Space+[cvbnm,] to dashes, colons and quotes.",
+            "manipulators": [
+                {
+                    <%# SpaceFn+v to hyphen, - %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    "from": <%= from("v", [], []) %>,
+                    "to": <%= to([["hyphen"]]) %>
+                },
+                {
+                    <%# SpaceFn+c to underscore, _ %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    "from": <%= from("c", [], []) %>,
+                    "to": <%= to([["hyphen", ["left_shift"]]]) %>
+                },
+                {
+                    <%# SpaceFn+b to colon, : %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    "from": <%= from("b", [], []) %>,
+                    "to": <%= to([["semicolon", ["left_shift"]]]) %>
+                },
+                {
+                    <%# SpaceFn+n to semicolon %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    "from": <%= from("n", [], []) %>,
+                    "to": <%= to([["semicolon"]]) %>
+                },
+                {
+                    <%# SpaceFn+m to double quote, " %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    "from": <%= from("m", [], []) %>,
+                    "to": <%= to([["quote", ["left_shift"]]]) %>
+                },
+                {
+                    <%# SpaceFn+, to single quote, ' %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    "from": <%= from("comma", [], []) %>,
+                    "to": <%= to([["quote"]]) %>
+                },
+                {
+                    <%# SpaceFn+. to pipe, | %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    "from": <%= from("period", [], []) %>,
+                    "to": <%= to([["backslash", ["left_shift"]]]) %>
+                },
+                {
+                    <%# SpaceFn+/ to backslash, \ %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    "from": <%= from("slash", [], []) %>,
+                    "to": <%= to([["backslash"]]) %>
+                }
+            ]
+        },
+        {
+            "description": "SymbolFn 1 & 2: d+f enables Symbol mode 1, j+k enables symbol mode 2",
+            "manipulators": [
+                {
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode2", "value": 0 } ],
+                    "from": { "simultaneous": [ { "key_code": "d" }, { "key_code": "f" } ] },
+                    "to": [ { "set_variable": { "name": "symbolfn_mode1", "value": 1 } } ],
+                    "to_after_key_up": [ { "set_variable": { "name": "symbolfn_mode1", "value": 0 } } ]
+                },
+                {
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 0 } ],
+                    "from": { "simultaneous": [ { "key_code": "j" }, { "key_code": "k" } ] },
+                    "to": [ { "set_variable": { "name": "symbolfn_mode2", "value": 1 } } ],
+                    "to_after_key_up": [ { "set_variable": { "name": "symbolfn_mode2", "value": 0 } } ]
+                }
+            ]
+        },
+        {
+            "description": "SymbolFn 1: SymbolFn1+[hjkl;] to *$=&%",
+            "manipulators": [
+                {
+                    <%# SymbolFn1+j+k to return %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 1 } ],
+                    "from": { "simultaneous": [ { "key_code": "j" }, { "key_code": "k" } ] },
+                    "to": <%= to([["return_or_enter"]]) %>
+                },
+                {
+                    <%# SymbolFn1+h to * %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 1 } ],
+                    "from": <%= from("h", [], []) %>,
+                    "to": <%= to([["8", ["left_shift"]]]) %>
+                },
+                {
+                    <%# SymbolFn1+j to $ %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 1 } ],
+                    "from": <%= from("j", [], []) %>,
+                    "to": <%= to([["4", ["left_shift"]]]) %>
+                },
+                {
+                    <%# SymbolFn1+k to * %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 1 } ],
+                    "from": <%= from("k", [], []) %>,
+                    "to": <%= to([["equal_sign"]]) %>
+                },
+                {
+                    <%# SymbolFn1+l to & %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 1 } ],
+                    "from": <%= from("l", [], []) %>,
+                    "to": <%= to([["7", ["left_shift"]]]) %>
+                },
+                {
+                    <%# SymbolFn1+; to % %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 1 } ],
+                    "from": <%= from("semicolon", [], []) %>,
+                    "to": <%= to([["5", ["left_shift"]]]) %>
+                }
+            ]
+        },
+        {
+            "description": "SymbolFn 2: SymbolFn2+[asdfg] to !@#^+",
+            "manipulators": [
+                {
+                    <%# SymbolFn2+d+f to backspace %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode2", "value": 1 } ],
+                    "from": { "simultaneous": [ { "key_code": "d" }, { "key_code": "f" } ] },
+                    "to": <%= to([["delete_or_backspace"]]) %>
+                },
+                {
+                    <%# SymbolFn2+a to ! %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode2", "value": 1 } ],
+                    "from": <%= from("a", [], []) %>,
+                    "to": <%= to([["1", ["left_shift"]]]) %>
+                },
+                {
+                    <%# SymbolFn2+s to @ %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode2", "value": 1 } ],
+                    "from": <%= from("s", [], []) %>,
+                    "to": <%= to([["2", ["left_shift"]]]) %>
+                },
+                {
+                    <%# SymbolFn2+d to # %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode2", "value": 1 } ],
+                    "from": <%= from("d", [], []) %>,
+                    "to": <%= to([["3", ["left_shift"]]]) %>
+                },
+                {
+                    <%# SymbolFn2+f to ^ %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode2", "value": 1 } ],
+                    "from": <%= from("f", [], []) %>,
+                    "to": <%= to([["6", ["left_shift"]]]) %>
+                },
+                {
+                    <%# SymbolFn2+g to + %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode2", "value": 1 } ],
+                    "from": <%= from("g", [], []) %>,
+                    "to": <%= to([["equal_sign", ["left_shift"]]]) %>
+                }
+            ]
+        }
+    ]
+}
+
