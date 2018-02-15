@@ -23,13 +23,66 @@
             ]
         },
         {
+            "description": "Arrow mode: R Opt as Arrow Mode",
+            "manipulators": [
+                {
+                    "type": "basic",
+                    "from": <%= from("right_option", [], []) %>,
+                    "to": [ { "set_variable": { "name": "arrow_mode", "value": 1 } } ],
+                    "to_after_key_up": [ { "set_variable": { "name": "arrow_mode", "value": 0 } } ]
+                }
+            ]
+        },
+        {
+            "description": "Arrow mode: open_bracket, semicolon, quote, backslash as arrows",
+            "manipulators": [
+                {
+                    <%# ArrowFn+[ to up arrow %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "arrow_mode", "value": 1 } ],
+                    "from": <%= from("open_bracket", [], []) %>,
+                    "to": <%= to([["up_arrow"]]) %>
+                },
+
+                {
+                    <%# ArrowFn+; to left arrow %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "arrow_mode", "value": 1 } ],
+                    "from": <%= from("semicolon", [], []) %>,
+                    "to": <%= to([["left_arrow"]]) %>
+                },
+                {
+                    <%# ArrowFn+' to down arrow %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "arrow_mode", "value": 1 } ],
+                    "from": <%= from("quote", [], []) %>,
+                    "to": <%= to([["down_arrow"]]) %>
+                },
+                {
+                    <%# ArrowFn+\ to right arrow %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "arrow_mode", "value": 1 } ],
+                    "from": <%= from("backslash", [], []) %>,
+                    "to": <%= to([["right_arrow"]]) %>
+                },
+                {
+                    <%# ArrowFn+\ to right arrow %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "arrow_mode", "value": 1 } ],
+                    "from": <%= from("close_bracket", [], []) %>,
+                    "to": <%= to([["right_arrow"]]) %>
+                }
+            ]
+        },
+        {
             "description": "Map open_bracket, quote and semicolon to Swedish chars on keypad.",
             "manipulators": [
                 {
                     "type": "basic",
                     "conditions": [
                         { "type": "variable_if", "name": "symbolfn_mode1", "value": 0 },
-                        { "type": "variable_if", "name": "symbolfn_mode2", "value": 0 }
+                        { "type": "variable_if", "name": "symbolfn_mode2", "value": 0 },
+                        { "type": "variable_if", "name": "arrow_mode", "value": 0 }
                     ],
                     "from": <%= from("open_bracket", [], ["any"]) %>,
                     "to": <%= to([["keypad_7"]]) %>
@@ -38,7 +91,8 @@
                     "type": "basic",
                     "conditions": [
                         { "type": "variable_if", "name": "symbolfn_mode1", "value": 0 },
-                        { "type": "variable_if", "name": "symbolfn_mode2", "value": 0 }
+                        { "type": "variable_if", "name": "symbolfn_mode2", "value": 0 },
+                        { "type": "variable_if", "name": "arrow_mode", "value": 0 }
                     ],
                     "from": <%= from("quote", [], ["any"]) %>,
                     "to": <%= to([["keypad_8"]]) %>
@@ -47,7 +101,8 @@
                     "type": "basic",
                     "conditions": [
                         { "type": "variable_if", "name": "symbolfn_mode1", "value": 0 },
-                        { "type": "variable_if", "name": "symbolfn_mode2", "value": 0 }
+                        { "type": "variable_if", "name": "symbolfn_mode2", "value": 0 },
+                        { "type": "variable_if", "name": "arrow_mode", "value": 0 }
                     ],
                     "from": <%= from("semicolon", [], ["any"]) %>,
                     "to": <%= to([["keypad_9"]]) %>
