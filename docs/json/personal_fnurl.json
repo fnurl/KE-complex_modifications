@@ -754,6 +754,24 @@
             }
           ],
           "from": {
+            "key_code": "n"
+          },
+          "to": [
+            {
+              "key_code": "return_or_enter"
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "symbolfn_mode1",
+              "value": 1
+            }
+          ],
+          "from": {
             "key_code": "h"
           },
           "to": [
@@ -869,6 +887,24 @@
                 "key_code": "f"
               }
             ]
+          },
+          "to": [
+            {
+              "key_code": "delete_or_backspace"
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "symbolfn_mode2",
+              "value": 1
+            }
+          ],
+          "from": {
+            "key_code": "v"
           },
           "to": [
             {

@@ -273,6 +273,13 @@
                     "to": <%= to([["return_or_enter"]]) %>
                 },
                 {
+                    <%# SymbolFn1+n to return %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 1 } ],
+                    "from": <%= from("n", [], []) %>,
+                    "to": <%= to([["return_or_enter"]]) %>
+                },
+                {
                     <%# SymbolFn1+h to * %>
                     "type": "basic",
                     "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 1 } ],
@@ -317,6 +324,13 @@
                     "type": "basic",
                     "conditions": [ { "type": "variable_if", "name": "symbolfn_mode2", "value": 1 } ],
                     "from": { "simultaneous": [ { "key_code": "d" }, { "key_code": "f" } ] },
+                    "to": <%= to([["delete_or_backspace"]]) %>
+                },
+                {
+                    <%# SymbolFn2+v to backspace %>
+                    "type": "basic",
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode2", "value": 1 } ],
+                    "from": <%= from("v", [], []) %>,
                     "to": <%= to([["delete_or_backspace"]]) %>
                 },
                 {
