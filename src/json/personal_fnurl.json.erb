@@ -1,20 +1,42 @@
+<%#
+
+Author: fnurl
+
+Compile to json by using `make`
+Implements the following virtual modifiers:
+
+SpaceFn (hold spacebar)
+SymbolFn1 (hold d+f)
+SymbolFn2 (hold j+k)
+ArrowFn
+
+Modifications for ISO SE layout to a layout more like ANSI US.
+%>
+
+<%# Note to self on expansions:
+
+"from": <%= from("keycode", ["mandatory modifier", ...], ["optional modifier", ...]) %>
+
+<%#
+"to": <%= to([["keycode", ["modifier", ...]]]) %>
+
+
 <%
 internal = { :vendor_id => 1452, :product_id => 632, :description => "Internal Apple Keyboard" }
 external_apple_bt = { :vendor_id => 1452, :product_id => 598, :description => "External Apple BT Keyboard" }
-identifiers = [internal, external_apple_bt]
+external_apple_usb = { :vendor_id => 1452, :product_id => 524, :description => "External Apple USB Keyboard"}
+identifiers = [internal, external_apple_bt, external_apple_usb]
 %>
 
 {
-    "title": "Personal rules @fnurl. All rules only apply to the internal and Apple BT.",
+    "title": "Personal rules @fnurl.",
     "rules": [
         {
-            "description": "Change caps_lock to Ctrl if pressed with other keys, to Escape if pressed alone (Internal KB and Apple BT KB).",
+            "description": "Change caps_lock to Ctrl if pressed with other keys, to Escape if pressed alone. (Device restricted)",
             "manipulators": [
                 {
-                    "conditions": [ 
-                      { "type": "device_if",
-                        "identifiers": <%= identifiers.to_json %>
-                      }
+                    "conditions": [ { "type": "device_if",
+                                      "identifiers": <%= identifiers.to_json %> }
                     ],
                     "type": "basic",
                     "from": <%= from("caps_lock", [], ["any"]) %>,
@@ -24,14 +46,20 @@ identifiers = [internal, external_apple_bt]
             ]
         },
         {
-            "description": "Change Left Ctrl to Hyper (Shift, Opt, Ctrl Cmd) (Internal KB and Apple BT KB).",
+            "description": "Change caps_lock to Ctrl if pressed with other keys, to Escape if pressed alone.",
             "manipulators": [
                 {
-                    "conditions": [ 
-                      { "type": "device_if",
-                        "identifiers": <%= identifiers.to_json %>
-                      }
-                    ],
+                    "type": "basic",
+                    "from": <%= from("caps_lock", [], ["any"]) %>,
+                    "to": <%= to([["left_control"]]) %>,
+                    "to_if_alone": <%= to([["escape"]]) %>
+                }
+            ]
+        },
+        {
+            "description": "Change Left Ctrl to Hyper (Shift, Opt, Ctrl Cmd).",
+            "manipulators": [
+                {
                     "type": "basic",
                     "from": <%= from("left_control", [], []) %>,
                     "to": <%= to([["left_command", ["left_shift", "left_option", "left_control"]]]) %>
@@ -39,14 +67,9 @@ identifiers = [internal, external_apple_bt]
             ]
         },
         {
-            "description": "Arrow mode: R Opt as Arrow Mode (Internal KB and Apple BT KB).",
+            "description": "Arrow mode: R Opt as Arrow Mode.",
             "manipulators": [
                 {
-                    "conditions": [ 
-                      { "type": "device_if",
-                        "identifiers": <%= identifiers.to_json %>
-                      }
-                    ],
                     "type": "basic",
                     "from": <%= from("right_option", [], []) %>,
                     "to": [ { "set_variable": { "name": "arrow_mode", "value": 1 } } ],
@@ -55,68 +78,96 @@ identifiers = [internal, external_apple_bt]
             ]
         },
         {
-            "description": "Arrow mode: open_bracket, semicolon, quote, backslash as arrows (Internal KB and Apple BT KB).",
+            "description": "Arrow mode: R Cmd as Arrow Mode.",
             "manipulators": [
                 {
-                    <%# ArrowFn+[ to up arrow %>
-                    "conditions": [ { "type": "device_if",
-                                    "identifiers": <%= identifiers.to_json %>
-                                    },
-                                    { "type": "variable_if", "name": "arrow_mode", "value": 1 } ],
+                    "type": "basic",
+                    "from": <%= from("right_command", [], []) %>,
+                    "to": [ { "set_variable": { "name": "arrow_mode", "value": 1 } } ],
+                    "to_after_key_up": [ { "set_variable": { "name": "arrow_mode", "value": 0 } } ]
+                }
+            ]
+        },
+        {
+            "description": "Arrow mode US: open_bracket, semicolon, quote, backslash as arrows.",
+            "manipulators": [
+                {
+                    <%# US ArrowFn+[ to up arrow %>
+                    "conditions": [ { "type": "variable_if", "name": "arrow_mode", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("open_bracket", [], []) %>,
                     "to": <%= to([["up_arrow"]]) %>
                 },
 
                 {
-                    <%# ArrowFn+; to left arrow %>
-                    "conditions": [ { "type": "device_if",
-                                    "identifiers": <%= identifiers.to_json %>
-                                    },
-                                    { "type": "variable_if", "name": "arrow_mode", "value": 1 } ],
+                    <%# US ArrowFn+; to left arrow %>
+                    "conditions": [ { "type": "variable_if", "name": "arrow_mode", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("semicolon", [], []) %>,
                     "to": <%= to([["left_arrow"]]) %>
                 },
                 {
-                    <%# ArrowFn+' to down arrow %>
-                    "conditions": [ { "type": "device_if",
-                                    "identifiers": <%= identifiers.to_json %>
-                                    },
-                                  { "type": "variable_if", "name": "arrow_mode", "value": 1 } ],
+                    <%# US ArrowFn+' to down arrow %>
+                    "conditions": [ { "type": "variable_if", "name": "arrow_mode", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("quote", [], []) %>,
                     "to": <%= to([["down_arrow"]]) %>
                 },
                 {
-                    <%# ArrowFn+\ to right arrow %>
-                    "conditions": [ { "type": "device_if",
-                                    "identifiers": <%= identifiers.to_json %>
-                                    },
-                                  { "type": "variable_if", "name": "arrow_mode", "value": 1 } ],
+                    <%# US ArrowFn+\ to right arrow %>
+                    "conditions": [ { "type": "variable_if", "name": "arrow_mode", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("backslash", [], []) %>,
                     "to": <%= to([["right_arrow"]]) %>
                 },
                 {
-                    <%# ArrowFn+\ to right arrow %>
-                    "conditions": [ { "type": "device_if",
-                                    "identifiers": <%= identifiers.to_json %>
-                                    },
-                                  { "type": "variable_if", "name": "arrow_mode", "value": 1 } ],
+                    <%# US ArrowFn+\ to right arrow (BT keyboard?) %>
+                    "conditions": [ { "type": "variable_if", "name": "arrow_mode", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("close_bracket", [], []) %>,
                     "to": <%= to([["right_arrow"]]) %>
                 }
             ]
         },
-        {
-            "description": "Map open_bracket, quote and semicolon to Swedish chars on keypad (Internal KB and Apple BT KB).",
+                {
+            "description": "Arrow mode SE: åöä' as arrows.",
             "manipulators": [
                 {
-                    "conditions": [ { "type": "device_if",
-                                      "identifiers": <%= identifiers.to_json %> },
-                                    { "type": "variable_if", "name": "symbolfn_mode1", "value": 0 },
+                    <%# SE ArrowFn+å to up arrow %>
+                    "conditions": [ { "type": "variable_if", "name": "arrow_mode", "value": 1 } ],
+                    "type": "basic",
+                    "from": <%= from("open_bracket", [], []) %>,
+                    "to": <%= to([["up_arrow"]]) %>
+                },
+
+                {
+                    <%# SE ArrowFn+ö to left arrow %>
+                    "conditions": [ { "type": "variable_if", "name": "arrow_mode", "value": 1 } ],
+                    "type": "basic",
+                    "from": <%= from("semicolon", [], []) %>,
+                    "to": <%= to([["left_arrow"]]) %>
+                },
+                {
+                    <%# SE ArrowFn+ä to down arrow %>
+                    "conditions": [ { "type": "variable_if", "name": "arrow_mode", "value": 1 } ],
+                    "type": "basic",
+                    "from": <%= from("quote", [], []) %>,
+                    "to": <%= to([["down_arrow"]]) %>
+                },
+                {
+                    <%# SE ArrowFn+' to right arrow %>
+                    "conditions": [ { "type": "variable_if", "name": "arrow_mode", "value": 1 } ],
+                    "type": "basic",
+                    "from": <%= from("non_us_pound", [], []) %>,
+                    "to": <%= to([["right_arrow"]]) %>
+                }
+            ]
+        },
+        {
+            "description": "Map open_bracket, quote and semicolon to Swedish chars on keypad.",
+            "manipulators": [
+                {
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 0 },
                                     { "type": "variable_if", "name": "symbolfn_mode2", "value": 0 },
                                     { "type": "variable_if", "name": "arrow_mode", "value": 0 } ],
                     "type": "basic",
@@ -124,9 +175,7 @@ identifiers = [internal, external_apple_bt]
                     "to": <%= to([["keypad_7"]]) %>
                 },
                 {
-                    "conditions": [ { "type": "device_if",
-                                    "identifiers": <%= identifiers.to_json %> },
-                                    { "type": "variable_if", "name": "symbolfn_mode1", "value": 0 },
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 0 },
                                     { "type": "variable_if", "name": "symbolfn_mode2", "value": 0 },
                                     { "type": "variable_if", "name": "arrow_mode", "value": 0 } ],
                     "type": "basic",
@@ -134,9 +183,7 @@ identifiers = [internal, external_apple_bt]
                     "to": <%= to([["keypad_8"]]) %>
                 },
                 {
-                    "conditions": [ { "type": "device_if",
-                                    "identifiers": <%= identifiers.to_json %> },
-                                    { "type": "variable_if", "name": "symbolfn_mode1", "value": 0 },
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 0 },
                                     { "type": "variable_if", "name": "symbolfn_mode2", "value": 0 },
                                     { "type": "variable_if", "name": "arrow_mode", "value": 0 } ],
                     "type": "basic",
@@ -146,11 +193,50 @@ identifiers = [internal, external_apple_bt]
             ]
         },
         {
-            "description": "SpaceFN: Space enables SpaceFN mode (Internal KB and Apple BT KB).",
+            "description": "Map SE dash to slash, SE underscore to ?, and paragraph to backick.",
             "manipulators": [
                 {
-                    "conditions": [ { "type": "device_if",
-                                    "identifiers": <%= identifiers.to_json %> } ],
+                    <%# dash to slash %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 0 },
+                                    { "type": "variable_if", "name": "symbolfn_mode2", "value": 0 },
+                                    { "type": "variable_if", "name": "arrow_mode", "value": 0 } ],
+                    "type": "basic",
+                    "from": <%= from("slash", [], []) %>,
+                    "to": <%= to([["7", ["left_shift"]]]) %>
+                },
+                {
+                    <%# shift dash to questionmark %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 0 },
+                                    { "type": "variable_if", "name": "symbolfn_mode2", "value": 0 },
+                                    { "type": "variable_if", "name": "arrow_mode", "value": 0 } ],
+                    "type": "basic",
+                    "from": <%= from("slash", ["right_shift"], []) %>,
+                    "to": <%= to([["hyphen", ["left_shift"]]]) %>
+                },
+                {
+                    <%# paragraph to backtick %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 0 },
+                                    { "type": "variable_if", "name": "symbolfn_mode2", "value": 0 },
+                                    { "type": "variable_if", "name": "arrow_mode", "value": 0 } ],
+                    "type": "basic",
+                    "from": <%= from("grave_accent_and_tilde", [], []) %>,
+                    "to": <%= to([["equal_sign", ["left_shift", "left_alt"]]]) %>
+                },
+                {
+                    <%# shift paragraph to tilde %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 0 },
+                                    { "type": "variable_if", "name": "symbolfn_mode2", "value": 0 },
+                                    { "type": "variable_if", "name": "arrow_mode", "value": 0 } ],
+                    "type": "basic",
+                    "from": <%= from("grave_accent_and_tilde", ["right_shift"], []) %>,
+                    "to": <%= to([["close_bracket", ["right_alt"]]]) %>
+                }
+            ]
+        },
+        {
+            "description": "SpaceFN: Space enables SpaceFN mode.",
+            "manipulators": [
+                {
                     "type": "basic",
                     "from": <%= from("spacebar", [], ["any"]) %>,
                     "to": [ { "set_variable": { "name": "spacefn_mode", "value": 1 } } ],
@@ -160,76 +246,60 @@ identifiers = [internal, external_apple_bt]
             ]
         },
         {
-            "description": "SpaceFN: Space+[sdfghjkl] to parens (Internal KB and Apple BT KB).",
+            "description": "SpaceFN: Space+[sdfghjkl] to parens (US Layout).",
             "manipulators": [
                 {
-                    <%# SpaceFn+g to left square bracket, [ %>
-                    "conditions": [ { "type": "device_if",
-                                    "identifiers": <%= identifiers.to_json %> },
-                                    { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    <%# US SpaceFn+g to left square bracket, [ %>
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("g", [], []) %>,
                     "to": <%= to([["open_bracket"]]) %>
                 },
                 {
-                    <%# SpaceFn+f to left parenthesis, ( %>
-                    "conditions": [ { "type": "device_if",
-                                      "identifiers": <%= identifiers.to_json %> },
-                                    { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    <%# US SpaceFn+f to left parenthesis, ( %>
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("f", [], []) %>,
                     "to": <%= to([["9", ["left_shift"]]]) %>
                 },
                 {
-                    <%# SpaceFn+d to left curly bracket, { %>
-                    "conditions": [ { "type": "device_if",
-                                      "identifiers": <%= identifiers.to_json %> },
-                                    { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    <%# US SpaceFn+d to left curly bracket, { %>
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("d", [], []) %>,
                     "to": <%= to([["open_bracket", ["left_shift"]]]) %>
                 },
                 {
-                    <%# SpaceFn+s to less than, < %>
-                    "conditions": [ { "type": "device_if",
-                                      "identifiers": <%= identifiers.to_json %> },
-                                    { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    <%# US SpaceFn+s to less than, < %>
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("s", [], []) %>,
                     "to": <%= to([["comma", ["left_shift"]]]) %>
                 },
                 {
-                    <%# SpaceFn+h to right square bracket, ] %>
-                    "conditions": [ { "type": "device_if",
-                                      "identifiers": <%= identifiers.to_json %> },
-                                    { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    <%# US SpaceFn+h to right square bracket, ] %>
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("h", [], []) %>,
                     "to": <%= to([["close_bracket"]]) %>
                 },
                 {
-                    <%# SpaceFn+j to right parenthesis, ) %>
-                    "conditions": [ { "type": "device_if",
-                                      "identifiers": <%= identifiers.to_json %> },
-                                    { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    <%# US SpaceFn+j to right parenthesis, ) %>
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("j", [], []) %>,
                     "to": <%= to([["0", ["left_shift"]]]) %>
                 },
                 {
-                    <%# SpaceFn+k to right curly bracket, } %>
-                    "conditions": [ { "type": "device_if",
-                                      "identifiers": <%= identifiers.to_json %> },
-                                    { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    <%# US SpaceFn+k to right curly bracket, } %>
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("k", [], []) %>,
                     "to": <%= to([["close_bracket", ["left_shift"]]]) %>
                 },
                 {
-                    <%# SpaceFn+l to greater than, > %>
-                    "conditions": [ { "type": "device_if",
-                                      "identifiers": <%= identifiers.to_json %> },
-                                    { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    <%# US SpaceFn+l to greater than, > %>
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("l", [], []) %>,
                     "to": <%= to([["period", ["left_shift"]]]) %>
@@ -237,82 +307,121 @@ identifiers = [internal, external_apple_bt]
             ]
         },
         {
-            "description": "SpaceFN: Space+[cvbnm,] to dashes, colons and quotes (Internal KB and Apple BT KB).",
+            "description": "SpaceFN: Space+[sdfghjkl] to parens (SE Layout).",
             "manipulators": [
                 {
-                    <%# SpaceFn+v to hyphen, - %>
-                    "conditions": [ { "type": "device_if",
-                                      "identifiers": <%= identifiers.to_json %> },
-                                    { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    <%# SE SpaceFn+g to left square bracket, [ %>
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    "type": "basic",
+                    "from": <%= from("g", [], []) %>,
+                    "to": <%= to([["8", ["left_alt"]]]) %>
+                },
+                {
+                    <%# SE SpaceFn+f to left parenthesis, ( %>
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    "type": "basic",
+                    "from": <%= from("f", [], []) %>,
+                    "to": <%= to([["8", ["left_shift"]]]) %>
+                },
+                {
+                    <%# SE SpaceFn+d to left curly bracket, { %>
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    "type": "basic",
+                    "from": <%= from("d", [], []) %>,
+                    "to": <%= to([["8", ["left_shift", "left_alt"]]]) %>
+                },
+                {
+                    <%# SE SpaceFn+s to less than, < %>
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    "type": "basic",
+                    "from": <%= from("s", [], []) %>,
+                    "to": <%= to([["grave_accent_and_tilde"]]) %>
+                },
+                {
+                    <%# SE SpaceFn+h to right square bracket, ] %>
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    "type": "basic",
+                    "from": <%= from("h", [], []) %>,
+                    "to": <%= to([["9", ["left_alt"]]]) %>
+                },
+                {
+                    <%# SE SpaceFn+j to right parenthesis, ) %>
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    "type": "basic",
+                    "from": <%= from("j", [], []) %>,
+                    "to": <%= to([["9", ["left_shift"]]]) %>
+                },
+                {
+                    <%# SE SpaceFn+k to right curly bracket, } %>
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    "type": "basic",
+                    "from": <%= from("k", [], []) %>,
+                    "to": <%= to([["9", ["left_shift", "left_alt"]]]) %>
+                },
+                {
+                    <%# SE SpaceFn+l to greater than, > %>
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    "type": "basic",
+                    "from": <%= from("l", [], []) %>,
+                    "to": <%= to([["grave_accent_and_tilde", ["left_shift"]]]) %>
+                }
+            ]
+        },
+        {
+            "description": "SpaceFN: Space+[cvbnm,] to dashes, colons and quotes (US Layout).",
+            "manipulators": [
+                {
+                    <%# US SpaceFn+v to hyphen, - %>
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("v", [], []) %>,
                     "to": <%= to([["hyphen"]]) %>
                 },
                 {
-                    <%# SpaceFn+c to underscore, _ %>
-                    "conditions": [ { "type": "device_if",
-                                      "identifiers": <%= identifiers.to_json %> },
-                                    { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    <%# US SpaceFn+c to underscore, _ %>
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("c", [], []) %>,
                     "to": <%= to([["hyphen", ["left_shift"]]]) %>
                 },
                 {
-                    <%# SpaceFn+b to colon, : %>
-                    "conditions": [ { "type": "device_if",
-                                      "identifiers": <%= identifiers.to_json %>
-                                    },
-                                  { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    <%# US SpaceFn+b to colon, : %>
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("b", [], []) %>,
                     "to": <%= to([["semicolon", ["left_shift"]]]) %>
                 },
                 {
-                    <%# SpaceFn+n to semicolon %>
-                    "conditions": [ { "type": "device_if",
-                                    "identifiers": <%= identifiers.to_json %>
-                                    },
-                                  { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    <%# US SpaceFn+n to semicolon %>
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("n", [], []) %>,
                     "to": <%= to([["semicolon"]]) %>
                 },
                 {
-                    <%# SpaceFn+m to double quote, " %>
-                    "conditions": [ { "type": "device_if",
-                                    "identifiers": <%= identifiers.to_json %>
-                                    },
-                                  { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    <%# US SpaceFn+m to double quote, " %>
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("m", [], []) %>,
                     "to": <%= to([["quote", ["left_shift"]]]) %>
                 },
                 {
-                    <%# SpaceFn+, to single quote, ' %>
-                    "conditions": [ { "type": "device_if",
-                                    "identifiers": <%= identifiers.to_json %>
-                                    },
-                                  { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    <%# US SpaceFn+, to single quote, ' %>
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("comma", [], []) %>,
                     "to": <%= to([["quote"]]) %>
                 },
                 {
-                    <%# SpaceFn+. to pipe, | %>
-                    "conditions": [ { "type": "device_if",
-                                    "identifiers": <%= identifiers.to_json %>
-                                    },
-                                  { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    <%# US SpaceFn+. to pipe, | %>
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("period", [], []) %>,
                     "to": <%= to([["backslash", ["left_shift"]]]) %>
                 },
                 {
-                    <%# SpaceFn+/ to backslash, \ %>
-                    "conditions": [ { "type": "device_if",
-                                    "identifiers": <%= identifiers.to_json %>
-                                    },
-                                  { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    <%# US SpaceFn+/ to backslash, \ %>
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("slash", [], []) %>,
                     "to": <%= to([["backslash"]]) %>
@@ -320,23 +429,78 @@ identifiers = [internal, external_apple_bt]
             ]
         },
         {
-            "description": "SymbolFn 1 & 2: d+f enables Symbol mode 1, j+k enables symbol mode 2 (Internal KB and Apple BT KB).",
+            "description": "SpaceFN: Space+[cvbnm,] to dashes, colons and quotes (SE Layout).",
             "manipulators": [
                 {
-                    "conditions": [ { "type": "device_if",
-                                    "identifiers": <%= identifiers.to_json %>
-                                    },
-                                  { "type": "variable_if", "name": "symbolfn_mode2", "value": 0 } ],
+                    <%# SE SpaceFn+v to hyphen, - %>
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    "type": "basic",
+                    "from": <%= from("v", [], []) %>,
+                    "to": <%= to([["slash"]]) %>
+                },
+                {
+                    <%# SE SpaceFn+c to underscore, _ %>
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    "type": "basic",
+                    "from": <%= from("c", [], []) %>,
+                    "to": <%= to([["slash", ["left_shift"]]]) %>
+                },
+                {
+                    <%# SE SpaceFn+b to colon, : %>
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    "type": "basic",
+                    "from": <%= from("b", [], []) %>,
+                    "to": <%= to([["period", ["left_shift"]]]) %>
+                },
+                {
+                    <%# SE SpaceFn+n to semicolon %>
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    "type": "basic",
+                    "from": <%= from("n", [], []) %>,
+                    "to": <%= to([["comma", ["left_shift"]]]) %>
+                },
+                {
+                    <%# SE SpaceFn+m to double quote, " %>
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    "type": "basic",
+                    "from": <%= from("m", [], []) %>,
+                    "to": <%= to([["2", ["left_shift"]]]) %>
+                },
+                {
+                    <%# SE SpaceFn+, to single quote, ' %>
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    "type": "basic",
+                    "from": <%= from("comma", [], []) %>,
+                    "to": <%= to([["backslash"]]) %>
+                },
+                {
+                    <%# SE SpaceFn+. to pipe, | %>
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    "type": "basic",
+                    "from": <%= from("period", [], []) %>,
+                    "to": <%= to([["7", ["left_alt"]]]) %>
+                },
+                {
+                    <%# SE SpaceFn+/ to backslash, \ %>
+                    "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
+                    "type": "basic",
+                    "from": <%= from("slash", [], []) %>,
+                    "to": <%= to([["7", ["left_shift", "left_alt"]]]) %>
+                }
+            ]
+        },
+        {
+            "description": "SymbolFn 1 & 2: d+f enables Symbol mode 1, j+k enables symbol mode 2.",
+            "manipulators": [
+                {
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode2", "value": 0 } ],
                     "type": "basic",
                     "from": { "simultaneous": [ { "key_code": "d" }, { "key_code": "f" } ] },
                     "to": [ { "set_variable": { "name": "symbolfn_mode1", "value": 1 } } ],
                     "to_after_key_up": [ { "set_variable": { "name": "symbolfn_mode1", "value": 0 } } ]
                 },
                 {
-                    "conditions": [ { "type": "device_if",
-                                    "identifiers": <%= identifiers.to_json %>
-                                    },
-                                  { "type": "variable_if", "name": "symbolfn_mode1", "value": 0 } ],
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 0 } ],
                     "type": "basic",
                     "from": { "simultaneous": [ { "key_code": "j" }, { "key_code": "k" } ] },
                     "to": [ { "set_variable": { "name": "symbolfn_mode2", "value": 1 } } ],
@@ -345,74 +509,53 @@ identifiers = [internal, external_apple_bt]
             ]
         },
         {
-            "description": "SymbolFn 1: SymbolFn1+[hjkl;] to *$=&% (Internal KB and Apple BT KB).",
+            "description": "SymbolFn 1: SymbolFn1+[hjkl;] to *$=&% (US Layout).",
             "manipulators": [
                 {
-                    <%# SymbolFn1+j+k to return %>
-                    "conditions": [ { "type": "device_if",
-                                    "identifiers": <%= identifiers.to_json %>
-                                    },
-                                  { "type": "variable_if", "name": "symbolfn_mode1", "value": 1 } ],
+                    <%# US SymbolFn1+j+k to return %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 1 } ],
                     "type": "basic",
                     "from": { "simultaneous": [ { "key_code": "j" }, { "key_code": "k" } ] },
                     "to": <%= to([["return_or_enter"]]) %>
                 },
                 {
-                    <%# SymbolFn1+n to return %>
-                    "conditions": [ { "type": "device_if",
-                                    "identifiers": <%= identifiers.to_json %>
-                                    },
-                                  { "type": "variable_if", "name": "symbolfn_mode1", "value": 1 } ],
+                    <%# US SymbolFn1+n to return %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("n", [], []) %>,
                     "to": <%= to([["return_or_enter"]]) %>
                 },
                 {
-                    <%# SymbolFn1+h to * %>
-                    "conditions": [ { "type": "device_if",
-                                    "identifiers": <%= identifiers.to_json %>
-                                    },
-                                  { "type": "variable_if", "name": "symbolfn_mode1", "value": 1 } ],
+                    <%# US SymbolFn1+h to * %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("h", [], []) %>,
                     "to": <%= to([["8", ["left_shift"]]]) %>
                 },
                 {
-                    <%# SymbolFn1+j to $ %>
-                    "conditions": [ { "type": "device_if",
-                                    "identifiers": <%= identifiers.to_json %>
-                                    },
-                                  { "type": "variable_if", "name": "symbolfn_mode1", "value": 1 } ],
+                    <%# US SymbolFn1+j to $ %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("j", [], []) %>,
                     "to": <%= to([["4", ["left_shift"]]]) %>
                 },
                 {
-                    <%# SymbolFn1+k to * %>
-                    "conditions": [ { "type": "device_if",
-                                    "identifiers": <%= identifiers.to_json %>
-                                    },
-                                  { "type": "variable_if", "name": "symbolfn_mode1", "value": 1 } ],
+                    <%# US SymbolFn1+k to = %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("k", [], []) %>,
                     "to": <%= to([["equal_sign"]]) %>
                 },
                 {
-                    <%# SymbolFn1+l to & %>
-                    "conditions": [ { "type": "device_if",
-                                    "identifiers": <%= identifiers.to_json %>
-                                    },
-                                  { "type": "variable_if", "name": "symbolfn_mode1", "value": 1 } ],
+                    <%# US SymbolFn1+l to & %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("l", [], []) %>,
                     "to": <%= to([["7", ["left_shift"]]]) %>
                 },
                 {
-                    <%# SymbolFn1+; to % %>
-                    "conditions": [ { "type": "device_if",
-                                    "identifiers": <%= identifiers.to_json %>
-                                    },
-                                  { "type": "variable_if", "name": "symbolfn_mode1", "value": 1 } ],
+                    <%# US SymbolFn1+; to % %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("semicolon", [], []) %>,
                     "to": <%= to([["5", ["left_shift"]]]) %>
@@ -420,74 +563,161 @@ identifiers = [internal, external_apple_bt]
             ]
         },
         {
-            "description": "SymbolFn 2: SymbolFn2+[asdfg] to !@#^+ (Internal KB and Apple BT KB).",
+            "description": "SymbolFn 1: SymbolFn1+[hjklö] to *$=&% (SE Layout).",
             "manipulators": [
                 {
-                    <%# SymbolFn2+d+f to backspace %>
-                    "conditions": [ { "type": "device_if",
-                                    "identifiers": <%= identifiers.to_json %>
-                                    },
-                                  { "type": "variable_if", "name": "symbolfn_mode2", "value": 1 } ],
+                    <%# SE SymbolFn1+j+k to return %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 1 } ],
+                    "type": "basic",
+                    "from": { "simultaneous": [ { "key_code": "j" }, { "key_code": "k" } ] },
+                    "to": <%= to([["return_or_enter"]]) %>
+                },
+                {
+                    <%# SE SymbolFn1+n to return %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 1 } ],
+                    "type": "basic",
+                    "from": <%= from("n", [], []) %>,
+                    "to": <%= to([["return_or_enter"]]) %>
+                },
+                {
+                    <%# SE SymbolFn1+h to * %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 1 } ],
+                    "type": "basic",
+                    "from": <%= from("h", [], []) %>,
+                    "to": <%= to([["backslash", ["left_shift"]]]) %>
+                },
+                {
+                    <%# SE SymbolFn1+j to $ %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 1 } ],
+                    "type": "basic",
+                    "from": <%= from("j", [], []) %>,
+                    "to": <%= to([["4", ["left_alt"]]]) %>
+                },
+                {
+                    <%# SE SymbolFn1+k to = %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 1 } ],
+                    "type": "basic",
+                    "from": <%= from("k", [], []) %>,
+                    "to": <%= to([["0", ["left_shift"]]]) %>
+                },
+                {
+                    <%# SE SymbolFn1+l to & %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 1 } ],
+                    "type": "basic",
+                    "from": <%= from("l", [], []) %>,
+                    "to": <%= to([["6", ["left_shift"]]]) %>
+                },
+                {
+                    <%# SE SymbolFn1+; to % %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 1 } ],
+                    "type": "basic",
+                    "from": <%= from("semicolon", [], []) %>,
+                    "to": <%= to([["5", ["left_shift"]]]) %>
+                }
+            ]
+        },
+        {
+            "description": "SymbolFn 2: SymbolFn2+[asdfg] to !@#^+ (US Layout).",
+            "manipulators": [
+                {
+                    <%# US SymbolFn2+d+f to backspace %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode2", "value": 1 } ],
                     "type": "basic",
                     "from": { "simultaneous": [ { "key_code": "d" }, { "key_code": "f" } ] },
                     "to": <%= to([["delete_or_backspace"]]) %>
                 },
                 {
-                    <%# SymbolFn2+v to backspace %>
-                    "conditions": [ { "type": "device_if",
-                                    "identifiers": <%= identifiers.to_json %>
-                                    },
-                                  { "type": "variable_if", "name": "symbolfn_mode2", "value": 1 } ],
+                    <%# US SymbolFn2+v to backspace %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode2", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("v", [], []) %>,
                     "to": <%= to([["delete_or_backspace"]]) %>
                 },
                 {
-                    <%# SymbolFn2+a to ! %>
-                    "conditions": [ { "type": "device_if",
-                                    "identifiers": <%= identifiers.to_json %>
-                                    },
-                                  { "type": "variable_if", "name": "symbolfn_mode2", "value": 1 } ],
+                    <%# US SymbolFn2+a to ! %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode2", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("a", [], []) %>,
                     "to": <%= to([["1", ["left_shift"]]]) %>
                 },
                 {
-                    <%# SymbolFn2+s to @ %>
-                    "conditions": [ { "type": "device_if",
-                                    "identifiers": <%= identifiers.to_json %>
-                                    },
-                                  { "type": "variable_if", "name": "symbolfn_mode2", "value": 1 } ],
+                    <%# US SymbolFn2+s to @ %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode2", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("s", [], []) %>,
                     "to": <%= to([["2", ["left_shift"]]]) %>
                 },
                 {
-                    <%# SymbolFn2+d to # %>
-                    "conditions": [ { "type": "device_if",
-                                    "identifiers": <%= identifiers.to_json %>
-                                    },
-                                  { "type": "variable_if", "name": "symbolfn_mode2", "value": 1 } ],
+                    <%# US SymbolFn2+d to # %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode2", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("d", [], []) %>,
                     "to": <%= to([["3", ["left_shift"]]]) %>
                 },
                 {
-                    <%# SymbolFn2+f to ^ %>
-                    "conditions": [ { "type": "device_if",
-                                    "identifiers": <%= identifiers.to_json %>
-                                    },
-                                  { "type": "variable_if", "name": "symbolfn_mode2", "value": 1 } ],
+                    <%# US SymbolFn2+f to ^ %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode2", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("f", [], []) %>,
                     "to": <%= to([["6", ["left_shift"]]]) %>
                 },
                 {
-                    <%# SymbolFn2+g to + %>
-                    "conditions": [ { "type": "device_if",
-                                    "identifiers": <%= identifiers.to_json %>
-                                    },
-                                  { "type": "variable_if", "name": "symbolfn_mode2", "value": 1 } ],
+                    <%# US SymbolFn2+g to + %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode2", "value": 1 } ],
+                    "type": "basic",
+                    "from": <%= from("g", [], []) %>,
+                    "to": <%= to([["equal_sign", ["left_shift"]]]) %>
+                }
+            ]
+        },
+        {
+            "description": "SymbolFn 2: SymbolFn2+[asdfg] to !@#^+ (SE Layout).",
+            "manipulators": [
+                {
+                    <%# SE SymbolFn2+d+f to backspace %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode2", "value": 1 } ],
+                    "type": "basic",
+                    "from": { "simultaneous": [ { "key_code": "d" }, { "key_code": "f" } ] },
+                    "to": <%= to([["delete_or_backspace"]]) %>
+                },
+                {
+                    <%# SE SymbolFn2+v to backspace %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode2", "value": 1 } ],
+                    "type": "basic",
+                    "from": <%= from("v", [], []) %>,
+                    "to": <%= to([["delete_or_backspace"]]) %>
+                },
+                {
+                    <%# SE SymbolFn2+a to ! %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode2", "value": 1 } ],
+                    "type": "basic",
+                    "from": <%= from("a", [], []) %>,
+                    "to": <%= to([["1", ["left_shift"]]]) %>
+                },
+                {
+                    <%# SE SymbolFn2+s to @ %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode2", "value": 1 } ],
+                    "type": "basic",
+                    "from": <%= from("s", [], []) %>,
+                    "to": <%= to([["2", ["left_alt"]]]) %>
+                },
+                {
+                    <%# SE SymbolFn2+d to # %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode2", "value": 1 } ],
+                    "type": "basic",
+                    "from": <%= from("d", [], []) %>,
+                    "to": <%= to([["3", ["left_shift"]]]) %>
+                },
+                {
+                    <%# SE SymbolFn2+f to ^ %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode2", "value": 1 } ],
+                    "type": "basic",
+                    "from": <%= from("f", [], []) %>,
+                    "to": <%= to([["close_bracket", ["left_shift", "left_alt"]]]) %>
+                },
+                {
+                    <%# SE SymbolFn2+g to + %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode2", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("g", [], []) %>,
                     "to": <%= to([["equal_sign", ["left_shift"]]]) %>
