@@ -1,8 +1,8 @@
 {
-  "title": "Personal rules @fnurl. All rules only apply to the internal and Apple BT.",
+  "title": "Personal rules @fnurl.",
   "rules": [
     {
-      "description": "Change caps_lock to Ctrl if pressed with other keys, to Escape if pressed alone (Internal KB and Apple BT KB).",
+      "description": "Change caps_lock to Ctrl if pressed with other keys, to Escape if pressed alone. (Device restricted)",
       "manipulators": [
         {
           "conditions": [
@@ -18,6 +18,11 @@
                   "vendor_id": 1452,
                   "product_id": 598,
                   "description": "External Apple BT Keyboard"
+                },
+                {
+                  "vendor_id": 1452,
+                  "product_id": 524,
+                  "description": "External Apple USB Keyboard"
                 }
               ]
             }
@@ -45,26 +50,35 @@
       ]
     },
     {
-      "description": "Change Left Ctrl to Hyper (Shift, Opt, Ctrl Cmd) (Internal KB and Apple BT KB).",
+      "description": "Change caps_lock to Ctrl if pressed with other keys, to Escape if pressed alone.",
       "manipulators": [
         {
-          "conditions": [
-            {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
+          "type": "basic",
+          "from": {
+            "key_code": "caps_lock",
+            "modifiers": {
+              "optional": [
+                "any"
               ]
             }
+          },
+          "to": [
+            {
+              "key_code": "left_control"
+            }
           ],
+          "to_if_alone": [
+            {
+              "key_code": "escape"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Change Left Ctrl to Hyper (Shift, Opt, Ctrl Cmd).",
+      "manipulators": [
+        {
           "type": "basic",
           "from": {
             "key_code": "left_control"
@@ -83,26 +97,9 @@
       ]
     },
     {
-      "description": "Arrow mode: R Opt as Arrow Mode (Internal KB and Apple BT KB).",
+      "description": "Arrow mode: R Opt as Arrow Mode.",
       "manipulators": [
         {
-          "conditions": [
-            {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            }
-          ],
           "type": "basic",
           "from": {
             "key_code": "right_option"
@@ -127,25 +124,37 @@
       ]
     },
     {
-      "description": "Arrow mode: open_bracket, semicolon, quote, backslash as arrows (Internal KB and Apple BT KB).",
+      "description": "Arrow mode: R Cmd as Arrow Mode.",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "right_command"
+          },
+          "to": [
+            {
+              "set_variable": {
+                "name": "arrow_mode",
+                "value": 1
+              }
+            }
+          ],
+          "to_after_key_up": [
+            {
+              "set_variable": {
+                "name": "arrow_mode",
+                "value": 0
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Arrow mode US: open_bracket, semicolon, quote, backslash as arrows.",
       "manipulators": [
         {
           "conditions": [
-            {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
             {
               "type": "variable_if",
               "name": "arrow_mode",
@@ -165,21 +174,6 @@
         {
           "conditions": [
             {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
-            {
               "type": "variable_if",
               "name": "arrow_mode",
               "value": 1
@@ -197,21 +191,6 @@
         },
         {
           "conditions": [
-            {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
             {
               "type": "variable_if",
               "name": "arrow_mode",
@@ -231,21 +210,6 @@
         {
           "conditions": [
             {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
-            {
               "type": "variable_if",
               "name": "arrow_mode",
               "value": 1
@@ -263,21 +227,6 @@
         },
         {
           "conditions": [
-            {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
             {
               "type": "variable_if",
               "name": "arrow_mode",
@@ -297,25 +246,87 @@
       ]
     },
     {
-      "description": "Map open_bracket, quote and semicolon to Swedish chars on keypad (Internal KB and Apple BT KB).",
+      "description": "Arrow mode SE: åöä' as arrows.",
       "manipulators": [
         {
           "conditions": [
             {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
+              "type": "variable_if",
+              "name": "arrow_mode",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "open_bracket"
+          },
+          "to": [
+            {
+              "key_code": "up_arrow"
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "arrow_mode",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "semicolon"
+          },
+          "to": [
+            {
+              "key_code": "left_arrow"
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "arrow_mode",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "quote"
+          },
+          "to": [
+            {
+              "key_code": "down_arrow"
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "arrow_mode",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "non_us_pound"
+          },
+          "to": [
+            {
+              "key_code": "right_arrow"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Map open_bracket, quote and semicolon to Swedish chars on keypad.",
+      "manipulators": [
+        {
+          "conditions": [
             {
               "type": "variable_if",
               "name": "symbolfn_mode1",
@@ -350,21 +361,6 @@
         {
           "conditions": [
             {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
-            {
               "type": "variable_if",
               "name": "symbolfn_mode1",
               "value": 0
@@ -397,21 +393,6 @@
         },
         {
           "conditions": [
-            {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
             {
               "type": "variable_if",
               "name": "symbolfn_mode1",
@@ -446,26 +427,149 @@
       ]
     },
     {
-      "description": "SpaceFN: Space enables SpaceFN mode (Internal KB and Apple BT KB).",
+      "description": "Map SE dash to slash, SE underscore to ?, and paragraph to backick.",
       "manipulators": [
         {
           "conditions": [
             {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
+              "type": "variable_if",
+              "name": "symbolfn_mode1",
+              "value": 0
+            },
+            {
+              "type": "variable_if",
+              "name": "symbolfn_mode2",
+              "value": 0
+            },
+            {
+              "type": "variable_if",
+              "name": "arrow_mode",
+              "value": 0
             }
           ],
+          "type": "basic",
+          "from": {
+            "key_code": "slash"
+          },
+          "to": [
+            {
+              "key_code": "7",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "symbolfn_mode1",
+              "value": 0
+            },
+            {
+              "type": "variable_if",
+              "name": "symbolfn_mode2",
+              "value": 0
+            },
+            {
+              "type": "variable_if",
+              "name": "arrow_mode",
+              "value": 0
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "slash",
+            "modifiers": {
+              "mandatory": [
+                "right_shift"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "hyphen",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "symbolfn_mode1",
+              "value": 0
+            },
+            {
+              "type": "variable_if",
+              "name": "symbolfn_mode2",
+              "value": 0
+            },
+            {
+              "type": "variable_if",
+              "name": "arrow_mode",
+              "value": 0
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "grave_accent_and_tilde"
+          },
+          "to": [
+            {
+              "key_code": "equal_sign",
+              "modifiers": [
+                "left_shift",
+                "left_alt"
+              ]
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "symbolfn_mode1",
+              "value": 0
+            },
+            {
+              "type": "variable_if",
+              "name": "symbolfn_mode2",
+              "value": 0
+            },
+            {
+              "type": "variable_if",
+              "name": "arrow_mode",
+              "value": 0
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "grave_accent_and_tilde",
+            "modifiers": {
+              "mandatory": [
+                "right_shift"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "close_bracket",
+              "modifiers": [
+                "right_alt"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "SpaceFN: Space enables SpaceFN mode.",
+      "manipulators": [
+        {
           "type": "basic",
           "from": {
             "key_code": "spacebar",
@@ -500,25 +604,10 @@
       ]
     },
     {
-      "description": "SpaceFN: Space+[sdfghjkl] to parens (Internal KB and Apple BT KB).",
+      "description": "SpaceFN: Space+[sdfghjkl] to parens (US Layout).",
       "manipulators": [
         {
           "conditions": [
-            {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
             {
               "type": "variable_if",
               "name": "spacefn_mode",
@@ -537,21 +626,6 @@
         },
         {
           "conditions": [
-            {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
             {
               "type": "variable_if",
               "name": "spacefn_mode",
@@ -574,21 +648,6 @@
         {
           "conditions": [
             {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
-            {
               "type": "variable_if",
               "name": "spacefn_mode",
               "value": 1
@@ -609,21 +668,6 @@
         },
         {
           "conditions": [
-            {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
             {
               "type": "variable_if",
               "name": "spacefn_mode",
@@ -646,21 +690,6 @@
         {
           "conditions": [
             {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
-            {
               "type": "variable_if",
               "name": "spacefn_mode",
               "value": 1
@@ -678,21 +707,6 @@
         },
         {
           "conditions": [
-            {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
             {
               "type": "variable_if",
               "name": "spacefn_mode",
@@ -715,21 +729,6 @@
         {
           "conditions": [
             {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
-            {
               "type": "variable_if",
               "name": "spacefn_mode",
               "value": 1
@@ -750,21 +749,6 @@
         },
         {
           "conditions": [
-            {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
             {
               "type": "variable_if",
               "name": "spacefn_mode",
@@ -787,25 +771,182 @@
       ]
     },
     {
-      "description": "SpaceFN: Space+[cvbnm,] to dashes, colons and quotes (Internal KB and Apple BT KB).",
+      "description": "SpaceFN: Space+[sdfghjkl] to parens (SE Layout).",
       "manipulators": [
         {
           "conditions": [
             {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
+              "type": "variable_if",
+              "name": "spacefn_mode",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "g"
+          },
+          "to": [
+            {
+              "key_code": "8",
+              "modifiers": [
+                "left_alt"
               ]
-            },
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "spacefn_mode",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "f"
+          },
+          "to": [
+            {
+              "key_code": "8",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "spacefn_mode",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "d"
+          },
+          "to": [
+            {
+              "key_code": "8",
+              "modifiers": [
+                "left_shift",
+                "left_alt"
+              ]
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "spacefn_mode",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "s"
+          },
+          "to": [
+            {
+              "key_code": "grave_accent_and_tilde"
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "spacefn_mode",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "h"
+          },
+          "to": [
+            {
+              "key_code": "9",
+              "modifiers": [
+                "left_alt"
+              ]
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "spacefn_mode",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "j"
+          },
+          "to": [
+            {
+              "key_code": "9",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "spacefn_mode",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "k"
+          },
+          "to": [
+            {
+              "key_code": "9",
+              "modifiers": [
+                "left_shift",
+                "left_alt"
+              ]
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "spacefn_mode",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "l"
+          },
+          "to": [
+            {
+              "key_code": "grave_accent_and_tilde",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "SpaceFN: Space+[cvbnm,] to dashes, colons and quotes (US Layout).",
+      "manipulators": [
+        {
+          "conditions": [
             {
               "type": "variable_if",
               "name": "spacefn_mode",
@@ -824,21 +965,6 @@
         },
         {
           "conditions": [
-            {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
             {
               "type": "variable_if",
               "name": "spacefn_mode",
@@ -861,21 +987,6 @@
         {
           "conditions": [
             {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
-            {
               "type": "variable_if",
               "name": "spacefn_mode",
               "value": 1
@@ -897,21 +1008,6 @@
         {
           "conditions": [
             {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
-            {
               "type": "variable_if",
               "name": "spacefn_mode",
               "value": 1
@@ -929,21 +1025,6 @@
         },
         {
           "conditions": [
-            {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
             {
               "type": "variable_if",
               "name": "spacefn_mode",
@@ -966,21 +1047,6 @@
         {
           "conditions": [
             {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
-            {
               "type": "variable_if",
               "name": "spacefn_mode",
               "value": 1
@@ -998,21 +1064,6 @@
         },
         {
           "conditions": [
-            {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
             {
               "type": "variable_if",
               "name": "spacefn_mode",
@@ -1035,21 +1086,6 @@
         {
           "conditions": [
             {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
-            {
               "type": "variable_if",
               "name": "spacefn_mode",
               "value": 1
@@ -1068,25 +1104,178 @@
       ]
     },
     {
-      "description": "SymbolFn 1 & 2: d+f enables Symbol mode 1, j+k enables symbol mode 2 (Internal KB and Apple BT KB).",
+      "description": "SpaceFN: Space+[cvbnm,] to dashes, colons and quotes (SE Layout).",
       "manipulators": [
         {
           "conditions": [
             {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
+              "type": "variable_if",
+              "name": "spacefn_mode",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "v"
+          },
+          "to": [
+            {
+              "key_code": "slash"
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "spacefn_mode",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "c"
+          },
+          "to": [
+            {
+              "key_code": "slash",
+              "modifiers": [
+                "left_shift"
               ]
-            },
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "spacefn_mode",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "b"
+          },
+          "to": [
+            {
+              "key_code": "period",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "spacefn_mode",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "n"
+          },
+          "to": [
+            {
+              "key_code": "comma",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "spacefn_mode",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "m"
+          },
+          "to": [
+            {
+              "key_code": "2",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "spacefn_mode",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "comma"
+          },
+          "to": [
+            {
+              "key_code": "backslash"
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "spacefn_mode",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "period"
+          },
+          "to": [
+            {
+              "key_code": "7",
+              "modifiers": [
+                "left_alt"
+              ]
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "spacefn_mode",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "slash"
+          },
+          "to": [
+            {
+              "key_code": "7",
+              "modifiers": [
+                "left_shift",
+                "left_alt"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "SymbolFn 1 & 2: d+f enables Symbol mode 1, j+k enables symbol mode 2.",
+      "manipulators": [
+        {
+          "conditions": [
             {
               "type": "variable_if",
               "name": "symbolfn_mode2",
@@ -1124,21 +1313,6 @@
         {
           "conditions": [
             {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
-            {
               "type": "variable_if",
               "name": "symbolfn_mode1",
               "value": 0
@@ -1175,25 +1349,10 @@
       ]
     },
     {
-      "description": "SymbolFn 1: SymbolFn1+[hjkl;] to *$=&% (Internal KB and Apple BT KB).",
+      "description": "SymbolFn 1: SymbolFn1+[hjkl;] to *$=&% (US Layout).",
       "manipulators": [
         {
           "conditions": [
-            {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
             {
               "type": "variable_if",
               "name": "symbolfn_mode1",
@@ -1220,21 +1379,6 @@
         {
           "conditions": [
             {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
-            {
               "type": "variable_if",
               "name": "symbolfn_mode1",
               "value": 1
@@ -1252,21 +1396,6 @@
         },
         {
           "conditions": [
-            {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
             {
               "type": "variable_if",
               "name": "symbolfn_mode1",
@@ -1289,21 +1418,6 @@
         {
           "conditions": [
             {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
-            {
               "type": "variable_if",
               "name": "symbolfn_mode1",
               "value": 1
@@ -1325,21 +1439,6 @@
         {
           "conditions": [
             {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
-            {
               "type": "variable_if",
               "name": "symbolfn_mode1",
               "value": 1
@@ -1357,21 +1456,6 @@
         },
         {
           "conditions": [
-            {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
             {
               "type": "variable_if",
               "name": "symbolfn_mode1",
@@ -1394,20 +1478,158 @@
         {
           "conditions": [
             {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
+              "type": "variable_if",
+              "name": "symbolfn_mode1",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "semicolon"
+          },
+          "to": [
+            {
+              "key_code": "5",
+              "modifiers": [
+                "left_shift"
               ]
-            },
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "SymbolFn 1: SymbolFn1+[hjklö] to *$=&% (SE Layout).",
+      "manipulators": [
+        {
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "symbolfn_mode1",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "simultaneous": [
+              {
+                "key_code": "j"
+              },
+              {
+                "key_code": "k"
+              }
+            ]
+          },
+          "to": [
+            {
+              "key_code": "return_or_enter"
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "symbolfn_mode1",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "n"
+          },
+          "to": [
+            {
+              "key_code": "return_or_enter"
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "symbolfn_mode1",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "h"
+          },
+          "to": [
+            {
+              "key_code": "backslash",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "symbolfn_mode1",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "j"
+          },
+          "to": [
+            {
+              "key_code": "4",
+              "modifiers": [
+                "left_alt"
+              ]
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "symbolfn_mode1",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "k"
+          },
+          "to": [
+            {
+              "key_code": "0",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "symbolfn_mode1",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "l"
+          },
+          "to": [
+            {
+              "key_code": "6",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "conditions": [
             {
               "type": "variable_if",
               "name": "symbolfn_mode1",
@@ -1430,25 +1652,10 @@
       ]
     },
     {
-      "description": "SymbolFn 2: SymbolFn2+[asdfg] to !@#^+ (Internal KB and Apple BT KB).",
+      "description": "SymbolFn 2: SymbolFn2+[asdfg] to !@#^+ (US Layout).",
       "manipulators": [
         {
           "conditions": [
-            {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
             {
               "type": "variable_if",
               "name": "symbolfn_mode2",
@@ -1475,21 +1682,6 @@
         {
           "conditions": [
             {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
-            {
               "type": "variable_if",
               "name": "symbolfn_mode2",
               "value": 1
@@ -1507,21 +1699,6 @@
         },
         {
           "conditions": [
-            {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
             {
               "type": "variable_if",
               "name": "symbolfn_mode2",
@@ -1544,21 +1721,6 @@
         {
           "conditions": [
             {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
-            {
               "type": "variable_if",
               "name": "symbolfn_mode2",
               "value": 1
@@ -1579,21 +1741,6 @@
         },
         {
           "conditions": [
-            {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
             {
               "type": "variable_if",
               "name": "symbolfn_mode2",
@@ -1616,21 +1763,6 @@
         {
           "conditions": [
             {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
-              ]
-            },
-            {
               "type": "variable_if",
               "name": "symbolfn_mode2",
               "value": 1
@@ -1652,20 +1784,159 @@
         {
           "conditions": [
             {
-              "type": "device_if",
-              "identifiers": [
-                {
-                  "vendor_id": 1452,
-                  "product_id": 632,
-                  "description": "Internal Apple Keyboard"
-                },
-                {
-                  "vendor_id": 1452,
-                  "product_id": 598,
-                  "description": "External Apple BT Keyboard"
-                }
+              "type": "variable_if",
+              "name": "symbolfn_mode2",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "g"
+          },
+          "to": [
+            {
+              "key_code": "equal_sign",
+              "modifiers": [
+                "left_shift"
               ]
-            },
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "SymbolFn 2: SymbolFn2+[asdfg] to !@#^+ (SE Layout).",
+      "manipulators": [
+        {
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "symbolfn_mode2",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "simultaneous": [
+              {
+                "key_code": "d"
+              },
+              {
+                "key_code": "f"
+              }
+            ]
+          },
+          "to": [
+            {
+              "key_code": "delete_or_backspace"
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "symbolfn_mode2",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "v"
+          },
+          "to": [
+            {
+              "key_code": "delete_or_backspace"
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "symbolfn_mode2",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "a"
+          },
+          "to": [
+            {
+              "key_code": "1",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "symbolfn_mode2",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "s"
+          },
+          "to": [
+            {
+              "key_code": "2",
+              "modifiers": [
+                "left_alt"
+              ]
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "symbolfn_mode2",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "d"
+          },
+          "to": [
+            {
+              "key_code": "3",
+              "modifiers": [
+                "left_shift"
+              ]
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "type": "variable_if",
+              "name": "symbolfn_mode2",
+              "value": 1
+            }
+          ],
+          "type": "basic",
+          "from": {
+            "key_code": "f"
+          },
+          "to": [
+            {
+              "key_code": "close_bracket",
+              "modifiers": [
+                "left_shift",
+                "left_alt"
+              ]
+            }
+          ]
+        },
+        {
+          "conditions": [
             {
               "type": "variable_if",
               "name": "symbolfn_mode2",
