@@ -193,7 +193,7 @@ identifiers = [internal, external_apple_bt, external_apple_usb]
             ]
         },
         {
-            "description": "Map SE dash to slash, SE underscore to ?, and paragraph to backick.",
+            "description": "Map SE dash to slash, SE underscore to ?, plus to hyphen, and paragraph to backick.",
             "manipulators": [
                 {
                     <%# dash to slash %>
@@ -214,13 +214,31 @@ identifiers = [internal, external_apple_bt, external_apple_usb]
                     "to": <%= to([["hyphen", ["left_shift"]]]) %>
                 },
                 {
+                    <%# plus to hyphen %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 0 },
+                                    { "type": "variable_if", "name": "symbolfn_mode2", "value": 0 },
+                                    { "type": "variable_if", "name": "arrow_mode", "value": 0 } ],
+                    "type": "basic",
+                    "from": <%= from("hyphen", [], []) %>,
+                    "to": <%= to([["slash"]]) %>
+                },
+                {
+                    <%# shift plus to underscore %>
+                    "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 0 },
+                                    { "type": "variable_if", "name": "symbolfn_mode2", "value": 0 },
+                                    { "type": "variable_if", "name": "arrow_mode", "value": 0 } ],
+                    "type": "basic",
+                    "from": <%= from("hyphen", ["right_shift"], []) %>,
+                    "to": <%= to([["slash", ["right_shift"]]]) %>
+                },
+                {
                     <%# paragraph to backtick %>
                     "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 0 },
                                     { "type": "variable_if", "name": "symbolfn_mode2", "value": 0 },
                                     { "type": "variable_if", "name": "arrow_mode", "value": 0 } ],
                     "type": "basic",
                     "from": <%= from("grave_accent_and_tilde", [], []) %>,
-                    "to": <%= to([["equal_sign", ["left_shift", "left_alt"]]]) %>
+                    "to": <%= to([["equal_sign", ["left_shift", "right_alt"]]]) %>
                 },
                 {
                     <%# shift paragraph to tilde %>
@@ -314,7 +332,7 @@ identifiers = [internal, external_apple_bt, external_apple_usb]
                     "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("g", [], []) %>,
-                    "to": <%= to([["8", ["left_alt"]]]) %>
+                    "to": <%= to([["8", ["right_alt"]]]) %>
                 },
                 {
                     <%# SE SpaceFn+f to left parenthesis, ( %>
@@ -328,7 +346,7 @@ identifiers = [internal, external_apple_bt, external_apple_usb]
                     "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("d", [], []) %>,
-                    "to": <%= to([["8", ["left_shift", "left_alt"]]]) %>
+                    "to": <%= to([["8", ["left_shift", "right_alt"]]]) %>
                 },
                 {
                     <%# SE SpaceFn+s to less than, < %>
@@ -342,7 +360,7 @@ identifiers = [internal, external_apple_bt, external_apple_usb]
                     "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("h", [], []) %>,
-                    "to": <%= to([["9", ["left_alt"]]]) %>
+                    "to": <%= to([["9", ["right_alt"]]]) %>
                 },
                 {
                     <%# SE SpaceFn+j to right parenthesis, ) %>
@@ -356,7 +374,7 @@ identifiers = [internal, external_apple_bt, external_apple_usb]
                     "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("k", [], []) %>,
-                    "to": <%= to([["9", ["left_shift", "left_alt"]]]) %>
+                    "to": <%= to([["9", ["left_shift", "right_alt"]]]) %>
                 },
                 {
                     <%# SE SpaceFn+l to greater than, > %>
@@ -478,14 +496,14 @@ identifiers = [internal, external_apple_bt, external_apple_usb]
                     "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("period", [], []) %>,
-                    "to": <%= to([["7", ["left_alt"]]]) %>
+                    "to": <%= to([["7", ["right_alt"]]]) %>
                 },
                 {
                     <%# SE SpaceFn+/ to backslash, \ %>
                     "conditions": [ { "type": "variable_if", "name": "spacefn_mode", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("slash", [], []) %>,
-                    "to": <%= to([["7", ["left_shift", "left_alt"]]]) %>
+                    "to": <%= to([["7", ["left_shift", "right_alt"]]]) %>
                 }
             ]
         },
@@ -591,7 +609,7 @@ identifiers = [internal, external_apple_bt, external_apple_usb]
                     "conditions": [ { "type": "variable_if", "name": "symbolfn_mode1", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("j", [], []) %>,
-                    "to": <%= to([["4", ["left_alt"]]]) %>
+                    "to": <%= to([["4", ["right_alt"]]]) %>
                 },
                 {
                     <%# SE SymbolFn1+k to = %>
@@ -699,7 +717,7 @@ identifiers = [internal, external_apple_bt, external_apple_usb]
                     "conditions": [ { "type": "variable_if", "name": "symbolfn_mode2", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("s", [], []) %>,
-                    "to": <%= to([["2", ["left_alt"]]]) %>
+                    "to": <%= to([["2", ["right_alt"]]]) %>
                 },
                 {
                     <%# SE SymbolFn2+d to # %>
@@ -713,14 +731,14 @@ identifiers = [internal, external_apple_bt, external_apple_usb]
                     "conditions": [ { "type": "variable_if", "name": "symbolfn_mode2", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("f", [], []) %>,
-                    "to": <%= to([["close_bracket", ["left_shift", "left_alt"]]]) %>
+                    "to": <%= to([["close_bracket", ["left_shift", "right_alt"]]]) %>
                 },
                 {
                     <%# SE SymbolFn2+g to + %>
                     "conditions": [ { "type": "variable_if", "name": "symbolfn_mode2", "value": 1 } ],
                     "type": "basic",
                     "from": <%= from("g", [], []) %>,
-                    "to": <%= to([["equal_sign", ["left_shift"]]]) %>
+                    "to": <%= to([["hyphen"]]) %>
                 }
             ]
         }
